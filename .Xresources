@@ -1,0 +1,9 @@
+Xft.dpi: 120
+
+XTerm*renderFont: true
+XTerm*faceName: JetBrains Mono
+XTerm*faceSize: 14
+
+UXTerm*renderFont: true
+UXTerm*faceName: JetBrains Mono
+UXTerm*faceSize: 14
