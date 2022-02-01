@@ -9,6 +9,14 @@
 (unless (package-installed-p 'evil)
   (package-install 'evil))
 
+;; Download Gruber Darker theme
+(unless (package-installed-p 'gruber-darker-theme)
+  (package-install 'gruber-darker-theme))
+
+;; Download undo-fu
+(unless (package-installed-p 'undo-fu)
+  (package-install 'undo-fu))
+
 ;; Download multiple-cursors
 ;; (unless (package-installed-p 'multiple-cursors)
 ;;   (package-install 'multiple-cursors))
@@ -26,14 +34,16 @@
 (evil-leader/set-key "h" 'split-window-vertically)
 (evil-leader/set-key "v" 'split-window-horizontally)
 
+(define-key evil-normal-state-map "u" 'undo-fu-only-undo)
+(define-key evil-normal-state-map "\C-r" 'undo-fu-only-redo)
+
 ;; Enable Evil
-(require 'evil)
+(require 'evil
+    (setq evil-undo-system 'undo-fu))
 (evil-mode 1)
 (setq evil-want-fine-undo t)
 (advice-add 'undo-auto--last-boundary-amalgamating-number
              :override #'ignore)
-(setq global-undo-tree-mode t)
-(setq evil-undo-system 'undo-tree)
 
 ;; Enable multiple cursors
 ;; (require 'multiple-cursors)
