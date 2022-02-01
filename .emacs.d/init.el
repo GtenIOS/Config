@@ -32,6 +32,7 @@
 (setq evil-want-fine-undo t)
 (advice-add 'undo-auto--last-boundary-amalgamating-number
              :override #'ignore)
+(setq global-undo-tree-mode t)
 (setq evil-undo-system 'undo-tree)
 
 ;; Enable multiple cursors
