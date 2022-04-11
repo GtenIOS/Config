@@ -48,7 +48,9 @@
 ;; Enable multiple cursors
 ;; (require 'multiple-cursors)
 ;; (multiple-cursors-mode 1)
-;; (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+;; (global-set-key (kbd "M-.") 'mc/mark-next-like-this)
+;; (global-set-key (kbd "M-,") 'mc/unmark-next-like-this)
+;; (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
 
 ;; evil-mc (Evil multiple cursors)
 (when (fboundp 'add-to-load-path)
@@ -97,8 +99,6 @@ play well with `evil-mc'."
 (defvar evil-mc-mode-line-prefix "ⓜ"
   "Override of the default mode line string for `evil-mc-mode'.")
 
-; (evil-leader/set-key "k" 'evil-mc-make-cursor-move-prev-line)
-; (evil-leader/set-key "j" 'evil-mc-make-cursor-move-next-line)
 (global-set-key (kbd "C-S-<up>") 'evil-mc-make-cursor-move-prev-line)
 (global-set-key (kbd "C-S-<down>") 'evil-mc-make-cursor-move-next-line)
 (global-set-key (kbd "C-S-c") 'evil-mc-undo-all-cursors)
@@ -122,12 +122,12 @@ play well with `evil-mc'."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("3d2e532b010eeb2f5e09c79f0b3a277bfc268ca91a59cdda7ffd056b868a03bc" "e1b843dd5b1c7b565c9e07e0ecb2fe02440abd139206bd238a2fc0a068b48f84" "d14f3df28603e9517eb8fb7518b662d653b25b26e83bd8e129acea042b774298" "30b14930bec4ada72f48417158155bc38dd35451e0f75b900febd355cda75c3e" default))
+   '("5d59bd44c5a875566348fa44ee01c98c1d72369dc531c1c5458b0864841f887c" "3d2e532b010eeb2f5e09c79f0b3a277bfc268ca91a59cdda7ffd056b868a03bc" "e1b843dd5b1c7b565c9e07e0ecb2fe02440abd139206bd238a2fc0a068b48f84" "d14f3df28603e9517eb8fb7518b662d653b25b26e83bd8e129acea042b774298" "30b14930bec4ada72f48417158155bc38dd35451e0f75b900febd355cda75c3e" default))
  '(display-line-numbers-type 'relative)
  '(global-display-line-numbers-mode t)
  '(menu-bar-mode nil)
  '(package-selected-packages
-   '(undo-tree evil-mc evil-surround evil-leader clues-theme evil-commentary all-the-icons-dired dired-sidebar all-the-icons git-gutter affe fzf flycheck yasnippet company lsp-ui lsp-mode rustic solarized-theme gruvbox-theme evil))
+   '(zig-mode multiple-cursors naysayer-theme yasnippet-snippets flycheck-rust ## rust-mode undo-tree evil-mc evil-surround evil-leader clues-theme evil-commentary all-the-icons-dired dired-sidebar all-the-icons git-gutter affe fzf flycheck yasnippet company lsp-ui lsp-mode rustic solarized-theme gruvbox-theme evil))
  '(scroll-bar-mode nil)
  '(toggle-scroll-bar nil)
  '(tool-bar-mode nil))
@@ -182,6 +182,13 @@ play well with `evil-mc'."
   (when buffer-file-name
     (setq-local buffer-save-without-query t)))
 
+;; Zig
+(unless (package-installed-p 'zig-mode)
+  (package-install 'zig-mode))
+
+(require 'zig-mode)
+(add-hook 'zig-mode-hook #'lsp-deferred)
+
 (use-package lsp-mode
   :ensure
   :commands lsp
@@ -199,7 +206,7 @@ play well with `evil-mc'."
   :commands lsp-ui-mode
   :custom
   (lsp-ui-peek-always-show t)
-  (lsp-ui-sideline-show-hover t)
+  ;; (lsp-ui-sideline-show-hover t)
   (lsp-ui-doc-enable nil))
 
 (use-package company
@@ -254,11 +261,11 @@ play well with `evil-mc'."
 (use-package flycheck :ensure)
 
 ;; C
-(require 'ccls)
-(use-package ccls
-  :hook ((c-mode c++-mode objc-mode cuda-mode) .
-         (lambda () (require 'ccls) (lsp))))
-(setq ccls-executable "/usr/local/bin/ccls")
+;; (require 'ccls)
+;; (use-package ccls
+;;   :hook ((c-mode c++-mode objc-mode cuda-mode) .
+;;          (lambda () (require 'ccls) (lsp))))
+;; (setq ccls-executable "/usr/local/bin/ccls")
 
 ;; indent
 (setq-default indent-tabs-mode nil)
@@ -347,3 +354,53 @@ play well with `evil-mc'."
 	      (call-interactively 'set-cwd)
 		  (cd cwd)
 		  (call-interactively 'fzf-find-file))))
+
+;; Move region
+;; (defun move-region (start end n)
+;;   "Move the current region up or down by N lines."
+;;   (interactive "r\np")
+;;   (let ((line-text (delete-and-extract-region start end)))
+;;     (forward-line n)
+;;     (let ((start (point)))
+;;       (insert line-text)
+;;       (setq deactivate-mark nil)
+;;       (set-mark start))))
+
+;; (defun move-region-up (start end n)
+;;   "Move the current line up by N lines."
+;;   (interactive "r\np")
+;;   (move-region start end (if (null n) -1 (- n))))
+
+;; (defun move-region-down (start end n)
+;;   "Move the current line down by N lines."
+;;   (interactive "r\np")
+;;   (move-region start end (if (null n) 1 n)))
+
+;; (global-set-key (kbd "M-<up>") 'move-region-up)
+;; (global-set-key (kbd "M-<down>") 'move-region-down)
+
+(defun move-line (n)
+  "Move the current line up or down by N lines."
+  (interactive "p")
+  (setq col (current-column))
+  (beginning-of-line) (setq start (point))
+  (end-of-line) (forward-char) (setq end (point))
+  (let ((line-text (delete-and-extract-region start end)))
+    (forward-line n)
+    (insert line-text)
+    ;; restore point to original column in moved line
+    (forward-line -1)
+    (forward-char col)))
+
+(defun move-line-up (n)
+  "Move the current line up by N lines."
+  (interactive "p")
+  (move-line (if (null n) -1 (- n))))
+
+(defun move-line-down (n)
+  "Move the current line down by N lines."
+  (interactive "p")
+  (move-line (if (null n) 1 n)))
+
+(global-set-key (kbd "M-<up>") 'move-line-up)
+(global-set-key (kbd "M-<down>") 'move-line-down)
