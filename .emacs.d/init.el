@@ -3,7 +3,7 @@
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
-(package-refresh-contents)
+;; (package-refresh-contents)
 
 ;; Download Evil
 (unless (package-installed-p 'evil)
@@ -101,6 +101,9 @@ play well with `evil-mc'."
 
 (global-set-key (kbd "C-S-<up>") 'evil-mc-make-cursor-move-prev-line)
 (global-set-key (kbd "C-S-<down>") 'evil-mc-make-cursor-move-next-line)
+(unless window-system
+  (global-set-key "\C-x\ \C-c" 'evil-mc-undo-all-cursors)
+  )
 (global-set-key (kbd "C-S-c") 'evil-mc-undo-all-cursors)
 
 ;; use-package
@@ -126,17 +129,19 @@ play well with `evil-mc'."
  '(display-line-numbers-type 'relative)
  '(global-display-line-numbers-mode t)
  '(menu-bar-mode nil)
+ '(mouse-wheel-scroll-amount '(3 ((shift) . hscroll) ((meta)) ((control) . text-scale)))
  '(package-selected-packages
-   '(zig-mode multiple-cursors naysayer-theme yasnippet-snippets flycheck-rust ## rust-mode undo-tree evil-mc evil-surround evil-leader clues-theme evil-commentary all-the-icons-dired dired-sidebar all-the-icons git-gutter affe fzf flycheck yasnippet company lsp-ui lsp-mode rustic solarized-theme gruvbox-theme evil))
+   '(flymake-php php-mode zig-mode multiple-cursors naysayer-theme yasnippet-snippets flycheck-rust ## rust-mode undo-tree evil-mc evil-surround evil-leader clues-theme evil-commentary all-the-icons-dired dired-sidebar all-the-icons git-gutter affe fzf flycheck yasnippet company lsp-ui lsp-mode rustic solarized-theme gruvbox-theme evil))
  '(scroll-bar-mode nil)
  '(toggle-scroll-bar nil)
- '(tool-bar-mode nil))
+ '(tool-bar-mode nil)
+ '(xterm-mouse-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:height 140 :family "Iosevka" :weight normal :width normal :spacing 100)))))
+ '(default ((t (:height 160 :family "Iosevka Term" :weight normal :width normal :spacing 100)))))
 
 ;; Gruber-darker 
 (require 'gruber-darker-theme)
@@ -260,6 +265,11 @@ play well with `evil-mc'."
 
 (use-package flycheck :ensure)
 
+(use-package flymake-php :ensure)
+
+;; PHP
+(add-hook 'php-mode-hook 'flymake-php-load)
+
 ;; C
 ;; (require 'ccls)
 ;; (use-package ccls
@@ -297,7 +307,7 @@ play well with `evil-mc'."
   (cons input (lambda (str) (orderless--highlight input str))))
 (setq affe-regexp-compiler #'affe-orderless-regexp-compiler)
 
-;;Exit insert mode by pressing j and then k quickly
+;;Exit insert mode by pressing j and then j quickly
 (use-package key-chord :ensure
   :config
   (setq key-chord-two-keys-delay 0.2)
@@ -402,5 +412,18 @@ play well with `evil-mc'."
   (interactive "p")
   (move-line (if (null n) 1 n)))
 
+(unless window-system
+    (define-key input-decode-map "\e\e[A" [M-up])
+    (define-key input-decode-map "\e\e[B" [M-down])
+    (define-key input-decode-map "\e\e[C" [M-right])
+    (define-key input-decode-map "\e\e[D" [M-left]))
 (global-set-key (kbd "M-<up>") 'move-line-up)
 (global-set-key (kbd "M-<down>") 'move-line-down)
+
+;; Enable mouse support
+(unless window-system
+    (global-set-key (kbd "<mouse-4>") 'mwheel-scroll)
+    (global-set-key (kbd "<mouse-5>") 'mwheel-scroll)
+    (setq mouse-wheel-up-event 'mouse-5)
+    (setq mouse-wheel-down-event 'mouse-4))
+    
