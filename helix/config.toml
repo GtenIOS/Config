@@ -1,4 +1,4 @@
-theme = "dark_plus"
+theme = "gruvbox_custom"
 
 [editor]
 line-number = "relative"
@@ -10,6 +10,7 @@ true-color = true
 "S-down" = "jump_view_down"
 "S-left" = "jump_view_left"
 "S-right" = "jump_view_right"
+"C-s" = ":w"
 
 [keys.insert]
 j = { j = "normal_mode" } # Maps `jj` to exit insert mode
