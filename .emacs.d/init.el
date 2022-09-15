@@ -9,6 +9,10 @@
 (unless (package-installed-p 'evil)
   (package-install 'evil))
 
+;; Git using Magit
+(unless (package-installed-p 'magit)
+  (package-install 'magit))
+
 ;; Download Gruber Darker theme
 (unless (package-installed-p 'gruber-darker-theme)
   (package-install 'gruber-darker-theme))
@@ -29,7 +33,7 @@
 (global-evil-leader-mode)
 (evil-leader/set-leader "<SPC>")
 (evil-leader/set-key "e" 'find-file)
-(evil-leader/set-key "o" 'Files)
+(evil-leader/set-key "f" 'Files)
 (evil-leader/set-key "c" 'global-hl-line-mode)
 (evil-leader/set-key "h" 'split-window-vertically)
 (evil-leader/set-key "v" 'split-window-horizontally)
@@ -131,7 +135,7 @@ play well with `evil-mc'."
  '(menu-bar-mode nil)
  '(mouse-wheel-scroll-amount '(3 ((shift) . hscroll) ((meta)) ((control) . text-scale)))
  '(package-selected-packages
-   '(flymake-php php-mode zig-mode multiple-cursors naysayer-theme yasnippet-snippets flycheck-rust ## rust-mode undo-tree evil-mc evil-surround evil-leader clues-theme evil-commentary all-the-icons-dired dired-sidebar all-the-icons git-gutter affe fzf flycheck yasnippet company lsp-ui lsp-mode rustic solarized-theme gruvbox-theme evil))
+   '(magit flymake-php php-mode zig-mode multiple-cursors naysayer-theme yasnippet-snippets flycheck-rust ## rust-mode undo-tree evil-mc evil-surround evil-leader clues-theme evil-commentary all-the-icons-dired dired-sidebar all-the-icons git-gutter affe fzf flycheck yasnippet company lsp-ui lsp-mode rustic solarized-theme gruvbox-theme evil))
  '(scroll-bar-mode nil)
  '(toggle-scroll-bar nil)
  '(tool-bar-mode nil)
@@ -422,8 +426,6 @@ play well with `evil-mc'."
 
 ;; Enable mouse support
 (unless window-system
-    (global-set-key (kbd "<mouse-4>") 'mwheel-scroll)
-    (global-set-key (kbd "<mouse-5>") 'mwheel-scroll)
-    (setq mouse-wheel-up-event 'mouse-5)
-    (setq mouse-wheel-down-event 'mouse-4))
+    (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
+    (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
     
