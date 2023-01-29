@@ -17,6 +17,7 @@ vim.opt.rtp:prepend(lazypath)
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
 
 require('lazy').setup({
    { -- LSP Configuration & Plugins
@@ -32,6 +33,16 @@ require('lazy').setup({
       -- Additional lua configuration, makes nvim stuff amazing
       'folke/neodev.nvim',
     },
+  },
+
+  {
+  "nvim-neo-tree/neo-tree.nvim",
+    branch = "v2.x",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+      "MunifTanjim/nui.nvim",
+    }
   },
 
    { -- Autocompletion
@@ -70,27 +81,6 @@ require('lazy').setup({
 
   -- ATS
    { 'vmchale/ats-vim' },
-})
-
--- When we are bootstrapping a configuration, it doesn't
--- make sense to execute the rest of the init.lua.
---
--- You'll need to restart nvim, and then it will work.
-if is_bootstrap then
-  print '=================================='
-  print '    Plugins are being installed'
-  print '    Wait until Packer completes,'
-  print '       then restart nvim'
-  print '=================================='
-  return
-end
-
--- Automatically source and re-compile packer whenever you save this init.lua
-local packer_group = vim.api.nvim_create_augroup('Packer', { clear = true })
-vim.api.nvim_create_autocmd('BufWritePost', {
-  command = 'source <afile> | silent! LspStop | silent! LspStart | PackerCompile',
-  group = packer_group,
-  pattern = vim.fn.expand '$MYVIMRC',
 })
 
 -- Custom lua codes
@@ -149,6 +139,9 @@ vim.keymap.set("n", "<C-s>", ":w<CR>", { silent = true })
 vim.keymap.set("i", "jj", "<Esc> <CR>", { silent = true })
 vim.keymap.set("n", "<C-t>", ":call FloatingWindowTerm() <CR> A", { silent = true })
 vim.keymap.set("n", "<C-e>", ":Vex <CR>", { silent = true })
+
+-- Neo-tree
+vim.keymap.set("n", "<C-n>", ":Neotree<CR>")
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
