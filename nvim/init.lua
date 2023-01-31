@@ -82,6 +82,9 @@ require('lazy').setup({
 
   -- ATS
   { 'vmchale/ats-vim' },
+
+  -- fc
+  { 'GtenIOS/fc.vim' },
 })
 
 -- Custom lua codes
