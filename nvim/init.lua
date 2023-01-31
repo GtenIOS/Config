@@ -94,7 +94,7 @@ require('terminal')
 vim.o.hlsearch = false
 
 -- Make line numbers default
-vim.o.rnu = true
+vim.o.number = true
 
 -- Tab/Spacing config
 vim.o.shiftwidth = 2
