@@ -1,0 +1,449 @@
+local install_path = vim.fn.stdpath "data" .. "/site/pack/packer/start/packer.nvim"
+
+if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
+	vim.fn.execute("!git clone https://github.com/wbthomason/packer.nvim " .. install_path)
+end
+
+local packer_group = vim.api.nvim_create_augroup("Packer", { clear = true })
+vim.api.nvim_create_autocmd(
+	"BufWritePost",
+	{ command = "source <afile> | PackerCompile", group = packer_group, pattern = "init.lua" }
+)
+
+require("packer").startup(function(use)
+	use "wbthomason/packer.nvim"
+
+	use "andweeb/presence.nvim"
+	use "glepnir/dashboard-nvim"
+	use "hrsh7th/cmp-nvim-lsp"
+	use "hrsh7th/nvim-cmp"
+	use "jose-elias-alvarez/null-ls.nvim"
+	use "kyazdani42/nvim-web-devicons"
+	use "L3MON4D3/LuaSnip"
+	use "lewis6991/gitsigns.nvim"
+	use "neovim/nvim-lspconfig"
+	use "nvim-lua/plenary.nvim"
+	use "nvim-lualine/lualine.nvim"
+	use "nvim-telescope/telescope.nvim"
+	use "nvim-telescope/telescope-file-browser.nvim"
+	use "nvim-treesitter/nvim-treesitter"
+	use "onsails/lspkind-nvim"
+	use "romainl/vim-cool"
+	use "ryanoasis/vim-devicons"
+	use "saadparwaiz1/cmp_luasnip"
+	use "simrat39/rust-tools.nvim"
+	use "tpope/vim-commentary"
+	use "williamboman/mason.nvim"
+	use "williamboman/mason-lspconfig.nvim"
+	use "windwp/nvim-autopairs"
+	use "https://git.sr.ht/~whynothugo/lsp_lines.nvim"
+	use "morhetz/gruvbox"
+	use "sainnhe/everforest"
+	use "joshdick/onedark.vim"
+end)
+
+vim.api.nvim_exec([[
+function! CreateCenteredFloatingWindow() abort
+		let width = min([&columns - 4, max([80, &columns - 20])])
+    let height = min([&lines - 4, max([20, &lines - 10])])
+    let top = ((&lines - height) / 2) - 1
+    let left = (&columns - width) / 2
+    let opts = {
+      \ 'relative': 'editor',
+      \ 'row': top,
+      \ 'col': left,
+      \ 'width': width,
+      \ 'height': height,
+      \ 'style': 'minimal',
+      \ 'focusable': v:false
+    \ }
+
+    let top = "╭" . repeat("─", width - 2) . "╮"
+    let mid = "│" . repeat(" ", width - 2) . "│"
+    let bot = "╰" . repeat("─", width - 2) . "╯"
+
+    let lines = [top] + repeat([mid], height - 2) + [bot]
+    let border_bufnr = nvim_create_buf(v:false, v:true)
+    call nvim_buf_set_lines(border_bufnr, 0, -1, v:true, lines)
+    let s:border_winid = nvim_open_win(border_bufnr, v:true, opts)
+    let opts.row += 1
+    let opts.height -= 2
+    let opts.col += 1
+    let opts.width -= 2
+    let opts.focusable = v:true
+    let text_bufnr = nvim_create_buf(v:false, v:true)
+    call nvim_open_win(text_bufnr, v:true, opts)
+    set winhl=Normal:Floating
+    au WinClosed * ++once :q | call nvim_win_close(s:border_winid, v:true)
+    return text_bufnr
+endfunction
+
+
+function! FloatingWindowTerm() abort
+    let l:buf = CreateCenteredFloatingWindow()
+    call nvim_set_current_buf(l:buf)
+    execute 'term' 
+endfunction
+]], false)
+
+vim.o.clipboard = "unnamedplus"
+vim.o.ignorecase = true
+vim.o.lazyredraw = true
+vim.o.number = true
+vim.o.relativenumber = true
+vim.o.scrolloff = 4
+vim.o.shiftwidth = 2
+vim.o.splitbelow = true
+vim.o.splitright = true
+vim.o.tabstop = 2
+vim.o.mouse = "a"
+vim.o.termguicolors = true
+vim.o.updatetime = 100
+
+-- theme settings
+-- vim.o.background = "light"
+-- vim.g.everforest_background = "soft"
+
+vim.g.mapleader = " "
+
+vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
+vim.keymap.set("n", "<Leader>w", "<C-w>k")
+vim.keymap.set("n", "<Leader>a", "<C-w>h")
+vim.keymap.set("n", "<Leader>s", "<C-w>j")
+vim.keymap.set("n", "<Leader>d", "<C-w>l")
+vim.keymap.set("n", "<Leader>j", ":bprevious<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>k", ":bnext<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>q", ":bprevious<CR>:bdelete #<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>y", ":%y<CR>")
+vim.keymap.set("n", "k", "gk", { silent = true })
+vim.keymap.set("n", "j", "gj", { silent = true })
+vim.keymap.set("n", "<Leader>l", ":vsplit term://zsh <CR>", { silent = true })
+vim.keymap.set("n", "<C-t>", ":call FloatingWindowTerm() <CR>", { silent = true })
+vim.keymap.set("t", "<Leader><Esc>", "<C-\\><C-n>", { silent = true })
+vim.keymap.set("n", "<Leader>v", ":edit ~/.config/nvim/init.lua<CR>", { silent = true })
+vim.keymap.set("n", "<C-s>", ":write<CR>", { silent = true })
+vim.keymap.set("i", "jj", "<Esc> <CR>", { silent = true })
+vim.keymap.set("n", "<C-e>", ":Vex <CR>", { silent = true })
+
+local lang_maps = {
+	cpp = { build = "g++ % -o %:r", exec = "./%:r" },
+	typescript = { exec = "bun %" },
+	javascript = { exec = "bun %" },
+	python = { exec = "python %" },
+	java = { build = "javac %", exec = "java %:r" },
+	sh = { exec = "./%" },
+	go = { build = "go build", exec = "go run %" },
+	rust = { build = "cargo build", exec = "cargo run" },
+	arduino = {
+		build = "arduino-cli compile --fqbn arduino:avr:uno %:r",
+		exec = "arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:avr:uno %:r",
+	},
+}
+for lang, data in pairs(lang_maps) do
+	if data.build ~= nil then
+		vim.api.nvim_create_autocmd(
+			"FileType",
+			{ command = "nnoremap <C-b> :split<CR>:terminal " .. data.build .. "<CR>", pattern = lang }
+		)
+	end
+	vim.api.nvim_create_autocmd(
+		"FileType",
+		{ command = "nnoremap <Leader>e :split<CR>:terminal " .. data.exec .. "<CR>", pattern = lang }
+	)
+end
+vim.api.nvim_create_autocmd("BufWritePre", {
+	command = "lua vim.lsp.buf.formatting_sync(nil, 1000)",
+	pattern = "*.cpp,*.css,*.go,*.h,*.html,*.js,*.json,*.jsx,*.lua,*.md,*.py,*.rs,*.ts,*.tsx,*.yaml",
+})
+vim.api.nvim_create_autocmd("InsertEnter", { command = "set norelativenumber", pattern = "*" })
+vim.api.nvim_create_autocmd("InsertLeave", { command = "set relativenumber", pattern = "*" })
+vim.api.nvim_create_autocmd("TermOpen", { command = "startinsert", pattern = "*" })
+vim.api.nvim_create_autocmd("BufWinEnter", { command = "set noexpandtab tabstop=4 shiftwidth=4", pattern = "*.rs" })
+vim.api.nvim_create_autocmd("BufWinEnter", { command = "set noexpandtab tabstop=2 shiftwidth=2", pattern = "*.fc" })
+
+vim.cmd "sign define DiagnosticSignError text=● texthl=DiagnosticSignError"
+vim.cmd "sign define DiagnosticSignWarn text=● texthl=DiagnosticSignWarn"
+vim.cmd "sign define DiagnosticSignInfo text=● texthl=DiagnosticSignInfo"
+vim.cmd "sign define DiagnosticSignHint text=● texthl=DiagnosticSignHint"
+
+vim.diagnostic.config { virtual_text = false }
+
+require("presence"):setup {
+	neovim_image_text = "Neovim",
+	presence_log_level = "error",
+	presence_editing_text = "Editing « %s »",
+	presence_file_explorer_text = "Browsing files",
+	presence_reading_text = "Reading  « %s »",
+	presence_workspace_text = "Working on « %s »",
+}
+
+vim.cmd "colorscheme onedark"
+
+local db = require "dashboard"
+db.custom_header = {
+	"",
+	"",
+	"",
+	"",
+	" ███╗   ██╗ ███████╗ ██████╗  ██╗   ██╗ ██╗ ███╗   ███╗",
+	" ████╗  ██║ ██╔════╝██╔═══██╗ ██║   ██║ ██║ ████╗ ████║",
+	" ██╔██╗ ██║ █████╗  ██║   ██║ ██║   ██║ ██║ ██╔████╔██║",
+	" ██║╚██╗██║ ██╔══╝  ██║   ██║ ╚██╗ ██╔╝ ██║ ██║╚██╔╝██║",
+	" ██║ ╚████║ ███████╗╚██████╔╝  ╚████╔╝  ██║ ██║ ╚═╝ ██║",
+	" ╚═╝  ╚═══╝ ╚══════╝ ╚═════╝    ╚═══╝   ╚═╝ ╚═╝     ╚═╝",
+	"",
+	"",
+	"",
+}
+db.custom_center = {
+	{
+		icon = " ",
+		desc = "New File            ",
+		action = "DashboardNewFile",
+		shortcut = "SPC o",
+	},
+	{
+		icon = " ",
+		desc = "Browse Files        ",
+		action = "Telescope file_browser",
+		shortcut = "SPC n",
+	},
+	{
+		icon = " ",
+		desc = "Find File           ",
+		action = "Telescope find_files",
+		shortcut = "SPC f",
+	},
+	{
+		icon = " ",
+		desc = "Configure Neovim    ",
+		action = "edit ~/.config/nvim/lua/init.lua",
+		shortcut = "SPC v",
+	},
+	{
+		icon = " ",
+		desc = "Exit Neovim              ",
+		action = "quit",
+	},
+}
+vim.keymap.set("n", "<Leader>b", ":Telescope buffers<CR>", { silent = true })
+
+local luasnip = require "luasnip"
+local cmp = require "cmp"
+cmp.setup {
+	snippet = {
+		expand = function(args)
+			luasnip.lsp_expand(args.body)
+		end,
+	},
+	mapping = cmp.mapping.preset.insert {
+		["<C-Space>"] = cmp.mapping.complete(),
+		["<CR>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = true },
+		["<Tab>"] = cmp.mapping(function(fallback)
+			if cmp.visible() then
+				cmp.select_next_item()
+			else
+				fallback()
+			end
+		end, { "i", "s" }),
+		["<S-Tab>"] = cmp.mapping(function(fallback)
+			if cmp.visible() then
+				cmp.select_prev_item()
+			else
+				fallback()
+			end
+		end, { "i", "s" }),
+	},
+	sources = { { name = "nvim_lsp" }, { name = "luasnip" } },
+}
+
+local null_ls = require "null-ls"
+null_ls.setup {
+	sources = {
+		null_ls.builtins.diagnostics.eslint_d,
+		null_ls.builtins.formatting.autopep8,
+		null_ls.builtins.formatting.eslint_d,
+		null_ls.builtins.formatting.gofmt,
+		null_ls.builtins.formatting.prettierd,
+		null_ls.builtins.formatting.rustfmt,
+		null_ls.builtins.formatting.stylua,
+	},
+}
+
+require("gitsigns").setup {
+	signs = {
+		add = { text = "+" },
+		change = { text = "~" },
+		delete = { text = "_" },
+		topdelete = { text = "‾" },
+		changedelete = { text = "~" },
+	},
+}
+
+local lspconfig = require "lspconfig"
+
+require("lualine").setup {
+	options = {
+		theme = "onedark",
+		component_separators = "|",
+		section_separators = { left = "", right = "" },
+	},
+	sections = {
+		lualine_a = { { "mode", separator = { left = "" }, right_padding = 2 } },
+		lualine_b = { "filename", "branch", { "diff", colored = false } },
+		lualine_c = {},
+		lualine_x = {},
+		lualine_y = { "filetype", "progress" },
+		lualine_z = { { "location", separator = { right = "" }, left_padding = 2 } },
+	},
+	inactive_sections = {
+		lualine_a = { "filename" },
+		lualine_b = {},
+		lualine_c = {},
+		lualine_x = {},
+		lualine_y = {},
+		lualine_z = {},
+	},
+	tabline = {
+		lualine_a = {
+			{
+				"buffers",
+				separator = { left = "", right = "" },
+				right_padding = 2,
+				symbols = { alternate_file = "" },
+			},
+		},
+	},
+}
+
+local telescope = require "telescope"
+telescope.setup {
+	defaults = {
+		mappings = { n = { ["o"] = require("telescope.actions").select_default } },
+		initial_mode = "insert",
+		file_ignore_patterns = { ".git/", "node_modules/", "target/" },
+	},
+	pickers = { find_files = { hidden = true } },
+	extensions = { file_browser = { hidden = true } },
+}
+telescope.load_extension "file_browser"
+vim.keymap.set("n", "<Leader>n", telescope.extensions.file_browser.file_browser)
+vim.keymap.set("n", "<Leader>f", require("telescope.builtin").find_files)
+vim.keymap.set("n", "<Leader>t", require("telescope.builtin").treesitter)
+
+require("nvim-treesitter.configs").setup {
+	ensure_installed = {
+		"bash",
+		"cpp",
+		"css",
+		"go",
+		"html",
+		"lua",
+		"make",
+		"python",
+		"rust",
+		"tsx",
+		"typescript",
+		"yaml",
+	},
+	highlight = { enable = true },
+}
+
+local rust_lsp_opts = {
+	-- rust-tools options
+	tools = {
+		autoSetHints = true,
+		hover_with_actions = true,
+		inlay_hints = {
+			show_parameter_hints = true,
+			parameter_hints_prefix = "",
+			other_hints_prefix = "",
+		},
+	},
+
+	-- all the opts to send to nvim-lspconfig
+	-- these override the defaults set by rust-tools.nvim
+	-- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc
+	-- https://rust-analyzer.github.io/manual.html#features
+	server = {
+		settings = {
+			["rust-analyzer"] = {
+				assist = {
+					importEnforceGranularity = true,
+					importPrefix = "crate"
+				},
+				cargo = {
+					allFeatures = true
+				},
+				checkOnSave = {
+					-- default: `cargo check`
+					command = "clippy"
+				},
+			},
+			inlayHints = {
+				lifetimeElisionHints = {
+					enable = true,
+					useParameterNames = true
+				},
+			},
+		}
+	},
+}
+require("rust-tools").setup { rust_lsp_opts }
+
+vim.keymap.set({ "n", "v" }, "<C-c>", ":Commentary<CR>", { silent = true })
+
+require("mason").setup {}
+
+local servers = {
+	"bashls",
+	"clangd",
+	"cssls",
+	"gopls",
+	"html",
+	"pyright",
+	"rust_analyzer",
+	"sumneko_lua",
+	"tailwindcss",
+	"tsserver",
+	"zls",
+}
+
+local has_formatter = { "gopls", "html", "rust_analyzer", "sumneko_lua", "tsserver", "zls" }
+require("mason-lspconfig").setup {
+	ensure_installed = servers,
+	automatic_installation = true,
+}
+local opts = {
+	on_attach = function(client, bufnr)
+		vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+		local opts = { buffer = bufnr }
+		vim.keymap.set("n", "<Leader>h", vim.lsp.buf.hover, opts)
+		vim.keymap.set("n", "<Leader>i", vim.lsp.buf.definition, opts)
+		vim.keymap.set("n", "<Leader>r", vim.lsp.buf.rename, opts)
+		vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+		vim.keymap.set("n", "gs", vim.lsp.buf.document_symbol, opts)
+		vim.keymap.set("n", "gw", vim.lsp.buf.workspace_symbol, opts)
+		local should_format = true
+		for _, value in pairs(has_formatter) do
+			if client.name == value then
+				should_format = false
+			end
+		end
+		if not should_format then
+			client.resolved_capabilities.document_formatting = false
+		end
+	end,
+	capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities()),
+}
+for _, server in pairs(servers) do
+	if server == "sumneko_lua" then
+		opts.settings = { Lua = { diagnostics = { globals = { "vim" } } } }
+	end
+	lspconfig[server].setup(opts)
+end
+
+require("nvim-autopairs").setup {}
+
+require("lsp_lines").setup {}
+vim.keymap.set("n", "<Leader>x", require("lsp_lines").toggle)
