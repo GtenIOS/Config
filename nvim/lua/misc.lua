@@ -4,7 +4,8 @@
 -- Set highlight on search
 vim.o.hlsearch = false
 
--- Make line numbers default
+-- Make relative line numbers default
+vim.o.rnu = true
 vim.o.number = true
 
 -- Tab/Spacing config
