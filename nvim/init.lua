@@ -72,7 +72,10 @@ require('lazy').setup({
   'lukas-reineke/indent-blankline.nvim', -- Add indentation guides even on blank lines
   'numToStr/Comment.nvim', -- "gc" to comment visual regions/lines
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-  'ellisonleao/gruvbox.nvim', -- Theme inspired by Atom
+  'ellisonleao/gruvbox.nvim', -- Gruvbox theme
+  'andreasvc/vim-256noir', -- Monochrome theme
+  'jhlgns/naysayer88.vim', -- Classic emacs
+  {'madyanov/gruber.vim', url = "https://gitlab.com/madyanov/gruber.vim"}, -- Gruber theme
 
   -- Fuzzy Finder (files, lsp, etc)
   { 'nvim-telescope/telescope.nvim', branch = '0.1.x', dependencies = { 'nvim-lua/plenary.nvim' } },
@@ -123,7 +126,7 @@ vim.wo.signcolumn = 'yes'
 
 -- Set colorscheme
 vim.o.termguicolors = true
-vim.cmd [[colorscheme gruvbox]]
+vim.cmd [[colorscheme gruber]]
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
@@ -179,7 +182,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 require('lualine').setup {
   options = {
     icons_enabled = false,
-    theme = 'gruvbox',
+    theme = 'gruber',
     component_separators = '|',
     section_separators = '',
   },
