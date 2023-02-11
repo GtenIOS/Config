@@ -1,4 +1,4 @@
-theme = "gruvbox_custom"
+theme = "gruber_darker"
 
 [editor]
 line-number = "relative"
@@ -14,3 +14,11 @@ true-color = true
 
 [keys.insert]
 j = { j = "normal_mode" } # Maps `jj` to exit insert mode
+"left" = "move_char_left"
+"down" = "move_line_down"
+"up" = "move_line_up"
+"right" = "move_char_right"
+
+[editor.file-picker]
+hidden = false
+git-ignore = false
