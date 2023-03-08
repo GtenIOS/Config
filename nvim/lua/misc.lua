@@ -32,9 +32,19 @@ vim.wo.signcolumn = 'yes'
 
 -- Set colorscheme
 vim.o.termguicolors = true
-vim.cmd [[colorscheme gruber]]
+vim.cmd [[colorscheme gruvbox]]
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
 
-
+-- Launch Telescope on startup
+vim.api.nvim_create_augroup("telescope", {})
+vim.api.nvim_create_autocmd("UiEnter", {
+  desc = "Open Telescope automatically",
+  group = "telescope",
+  callback = function()
+    if vim.fn.argc() == 0 then
+      vim.cmd "Telescope find_files"
+    end
+  end,
+})
