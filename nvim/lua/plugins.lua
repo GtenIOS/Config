@@ -52,10 +52,8 @@ return {
   'numToStr/Comment.nvim', -- "gc" to comment visual regions/lines
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   'ellisonleao/gruvbox.nvim', -- Gruvbox theme
-  'andreasvc/vim-256noir', -- Monochrome theme
-  'jhlgns/naysayer88.vim', -- Classic emacs
-  'reedes/vim-colors-pencil', -- Minimal light
-  'chriskempson/base16-vim', -- Minimal dark + light
+  'sainnhe/everforest', -- Everforest theme
+  'sainnhe/edge', -- Edge theme
   {'madyanov/gruber.vim', url = "https://gitlab.com/madyanov/gruber.vim"}, -- Gruber theme
 
   -- Fuzzy Finder (files, lsp, etc)
