@@ -22,7 +22,8 @@ vim.keymap.set("n", "<S-Down>", "<C-w><Down>", { silent = true })
 -- Misc keymaps
 vim.keymap.set("n", "<C-s>", ":w<CR>", { silent = true })
 vim.keymap.set("i", "jj", "<Esc> <CR>", { silent = true })
-vim.keymap.set("n", "<C-t>", ":call FloatingWindowTerm() <CR> A", { silent = true })
+-- vim.keymap.set("n", "<C-t>", ":call FloatingWindowTerm() <CR> A", { silent = true })
+vim.keymap.set("n", "<C-t>", ":FloatermToggle<CR>", { silent = true })
 vim.keymap.set("n", "<C-e>", ":Vex <CR>", { silent = true })
 
 -- Comment keymaps

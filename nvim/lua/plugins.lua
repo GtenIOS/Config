@@ -67,4 +67,7 @@ return {
 
   -- fc
   { 'GtenIOS/fc.vim' },
+
+  -- Floating terminal
+  { 'voldikss/vim-floaterm' },
 }
