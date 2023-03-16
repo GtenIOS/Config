@@ -1,4 +1,4 @@
-theme = "gruber_darker"
+theme = "default"
 
 [editor]
 line-number = "relative"
