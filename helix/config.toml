@@ -1,15 +1,21 @@
-theme = "default"
+theme = "custom_default"
 
 [editor]
 line-number = "relative"
 mouse = true
 true-color = true
+cursorline = true
+rulers = [80]
+bufferline = "multiple"
 
 [keys.normal]
 "S-up" = "jump_view_up"
 "S-down" = "jump_view_down"
 "S-left" = "jump_view_left"
 "S-right" = "jump_view_right"
+"A-left" = ":bp"
+"A-right" = ":bn"
+"C-q" = ":bc"
 "C-s" = ":w"
 
 [keys.insert]
@@ -22,3 +28,8 @@ j = { j = "normal_mode" } # Maps `jj` to exit insert mode
 [editor.file-picker]
 hidden = false
 git-ignore = false
+
+[editor.indent-guides]
+render = true
+character = "╎" # Some characters that work well: "╎", "▏", "┆", "┊", "⸽"
+skip-levels = 1
