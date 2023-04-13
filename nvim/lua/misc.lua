@@ -34,6 +34,9 @@ vim.wo.signcolumn = 'yes'
 vim.o.termguicolors = true
 vim.cmd [[colorscheme everforest]]
 
+-- Set colorcolumn
+vim.o.colorcolumn = "80"
+
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
 
