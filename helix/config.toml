@@ -8,6 +8,12 @@ cursorline = true
 rulers = [80]
 bufferline = "multiple"
 
+[editor.soft-wrap]
+enable = true
+
+[editor.lsp]
+display-inlay-hints = true
+
 [keys.normal]
 "S-up" = "jump_view_up"
 "S-down" = "jump_view_down"
