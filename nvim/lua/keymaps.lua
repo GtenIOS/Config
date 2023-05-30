@@ -7,12 +7,6 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
--- Telescope
-vim.keymap.set("n", "<Leader>b", ":Telescope buffers<CR>", { silent = true })
-vim.keymap.set("n", "<Leader>f", ":Telescope find_files<CR>", { silent = true })
-vim.keymap.set("n", "<Leader>F", ":Telescope git_files<CR>", { silent = true })
-vim.keymap.set("n", "<Leader>s", ":Telescope symbols<CR>", { silent = true })
-
 -- Window navigation
 vim.keymap.set("n", "<S-Up>", "<C-w><Up>", { silent = true })
 vim.keymap.set("n", "<S-Left>", "<C-w><Left>", { silent = true })
@@ -32,6 +26,6 @@ vim.keymap.set("i", "<C-c>", "<Esc> <Plug>(comment_toggle_linewise_current) i", 
 vim.keymap.set("v", "<C-c>", "<Plug>(comment_toggle_linewise_visual)", { silent = true })
 
 -- Neo-tree
-vim.keymap.set("n", "<C-n>", ":Neotree<CR>")
+vim.keymap.set("n", "<C-n>", ":Neotree toggle=true<CR>")
 
 

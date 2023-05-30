@@ -22,6 +22,19 @@ require('telescope').setup {
 pcall(require('telescope').load_extension, 'fzf')
 
 -- See `:help telescope.builtin`
+vim.keymap.set("n", "<Leader>b", ":Telescope buffers<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>f", function ()
+  local git_dir = vim.fn.finddir('.git', vim.fn.getcwd() .. ";")
+  if (git_dir ~= "")
+  then
+    require('telescope.builtin').git_files()
+  else
+    require('telescope.builtin').find_files()
+  end
+end, { silent = true })
+vim.keymap.set("n", "<Leader>F", ":Telescope find_files<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>s", ":Telescope symbols<CR>", { silent = true })
+
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
 vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
 vim.keymap.set('n', '<leader>/', function()

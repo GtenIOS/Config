@@ -47,7 +47,13 @@ vim.api.nvim_create_autocmd("UiEnter", {
   group = "telescope",
   callback = function()
     if vim.fn.argc() == 0 then
-      vim.cmd "Telescope find_files"
+      local git_dir = vim.fn.finddir('.git', vim.fn.getcwd() .. ";")
+      if (git_dir ~= "")
+      then
+        vim.cmd "Telescope git_files"
+      else
+        vim.cmd "Telescope find_files"
+      end
     end
   end,
 })
