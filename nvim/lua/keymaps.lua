@@ -28,4 +28,9 @@ vim.keymap.set("v", "<C-c>", "<Plug>(comment_toggle_linewise_visual)", { silent 
 -- Neo-tree
 vim.keymap.set("n", "<C-n>", ":Neotree toggle=true<CR>")
 
+-- vim-visual-multi
+vim.keymap.set("n", "<C-d>", ":call vm#commands#ctrln(1)<CR>", { silent = true })
+vim.keymap.set("i", "<C-d>", ":call vm#commands#ctrln(1)<CR>", { silent = true })
+vim.keymap.set("n", "<M-C-Down>", ":call vm#commands#add_cursor_down(1, 1)<CR>", { silent = true })
+vim.keymap.set("n", "<M-C-Up>", ":call vm#commands#add_cursor_up(1, 1)<CR>", { silent = true })
 
