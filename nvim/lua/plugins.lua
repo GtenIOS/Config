@@ -70,4 +70,7 @@ return {
 
   -- Floating terminal
   { 'voldikss/vim-floaterm' },
+
+  -- Multi Cusrsor
+  { 'mg979/vim-visual-multi', branch = 'master' },
 }
