@@ -53,6 +53,7 @@ return {
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   'ellisonleao/gruvbox.nvim', -- Gruvbox theme
   'sainnhe/everforest', -- Everforest theme
+  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
   'sainnhe/edge', -- Edge theme
   {'madyanov/gruber.vim', url = "https://gitlab.com/madyanov/gruber.vim"}, -- Gruber theme
 

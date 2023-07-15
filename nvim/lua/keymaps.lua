@@ -34,3 +34,5 @@ vim.keymap.set("i", "<C-d>", ":call vm#commands#ctrln(1)<CR>", { silent = true }
 vim.keymap.set("n", "<M-C-Down>", ":call vm#commands#add_cursor_down(1, 1)<CR>", { silent = true })
 vim.keymap.set("n", "<M-C-Up>", ":call vm#commands#add_cursor_up(1, 1)<CR>", { silent = true })
 
+vim.keymap.set("n", "<leader>x", ":tabclose <CR>", { silent = true })
+

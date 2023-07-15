@@ -58,6 +58,19 @@ vim.api.nvim_create_autocmd("UiEnter", {
   end,
 })
 
+-- Diagnostics signs
+local signs = { Error = " ", Warning = " ", Hint = " ", Information = " " }
+for type, icon in pairs(signs) do
+  local hl = "LspDiagnosticsSign" .. type
+  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+end
+vim.cmd [[ 
+  sign define DiagnosticSignError text=  linehl= texthl=DiagnosticSignError numhl= 
+  sign define DiagnosticSignWarn text= linehl= texthl=DiagnosticSignWarn numhl= 
+  sign define DiagnosticSignInfo text=  linehl= texthl=DiagnosticSignInfo numhl= 
+  sign define DiagnosticSignHint text=💡  linehl= texthl=DiagnosticSignHint numhl= 
+]]
+
 -- Format on save
 local format_sync_grp = vim.api.nvim_create_augroup("Format", {})
 vim.api.nvim_create_autocmd("BufWritePre", {
@@ -67,3 +80,4 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   end,
   group = format_sync_grp,
 })
+
